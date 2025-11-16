@@ -1,3 +1,12 @@
-id,type,label,question,options ,answer,left,right
-1,fill,(i),Q. 1. Fill in the blanks:(i) Particles larger than …… size are considered to be suspended solids in an aqueous media.,,1 mm (micron),,
-1,fill ,(ii),(ii) (ii) The abbreviation TCU stands for …… colour unit.,,TRUE,,
+id,type,label,question,options,answer,left,right
+1,fill,(i)Particles larger than …… size are considered to be suspended solids in an ,Fill in the blanks,,1 mm (micron),,
+1,fill ,(ii)The abbreviation TCU stands for …… colour unit.,Fill in the blanks,,TRUE,,
+1,fill ,(iii) Iron may cause colour problem even at a low concentration like …… mg/l.,Fill in the blanks,,,,
+2,truefalse,"(i) If alkalinity is much higher than the total hardness, non-carbonate hardness is expected to be absent.", Indicate whether the following statements are True or False:,,,,
+2,truefalse,(ii) Mottled and discoloured teeth occur when drinking water supply contains excessive fluorides., Indicate whether the following statements are True or False:,,,,
+2,truefalse,(iii) Total dissolved solids concentrations are usually very high in surface waters., Indicate whether the following statements are True or False:,,,,
+2,truefalse,"(iv) In any unpolluted natural system, the alkalinity is caused mostly by the bicarbonates.", Indicate whether the following statements are True or False:,,,,
+2,truefalse,"(v) Lead, chromium, cadmium, zinc, copper, etc., are known as heavy metals, as their atomic numbers are more than 23.", Indicate whether the following statements are True or False:,,,,
+3,fill,"(i) Lead, chromium, cadmium, zinc, copper, iron, etc., are known as heavy metals because their atomic numbers are more than ……",Fill in the blanks:,,,,
+3,fill,(ii) Most common rate of filtration in rapid sand filters is …… m/h.,Fill in the blanks:,,,,
+3,fill,"(iii) Part of the total hardness, which is equivalent to alkalinity, is known as …… hardness.",Fill in the blanks:,,,,
