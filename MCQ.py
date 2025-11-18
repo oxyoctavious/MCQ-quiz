@@ -1,4 +1,5 @@
 import csv
+import random
 
 
 def split_pipe(x):
@@ -56,6 +57,37 @@ if __name__=="__main__":
         else:
             print("Failed to load questions. Exiting")
                    
+# ----------------------------------
+#         shuffel question
+# ----------------------------------
 
+def shuffel_questions_one_by_one(questions):
+    print("shufffling not emplemented")
+    
+def test_user(questions):
+    print("testing not implemented")
+    
+# ----------------------------------
+#            MENUE LOOP
+# ----------------------------------
+
+def show_menue():
+    print("\n======= Quiz Menue ========")
+    print("1. Shuffel questions one by one")
+    print("2. Display questions by ID:")
+    print("3. Test yourself:")
+    print("4. Exit:")
+    
+    
+    
+    def start_quiz(questions):
+        while True:
+            show_menue()
+            choice = input("Enter Choice: :").strip
+            
+            if choice == "1":
+                shuffel_questions_one_by_one
+            
+    
 
     
