@@ -40,54 +40,116 @@ def load_questions(csv_path):
         
     return data
 
-
-if __name__=="__main__":
-    
-                #csv file path
-        csv_path = r"C:\Users\CSH\Desktop\Engeneering Economics\Mcq.csv"
-        
-        questions = load_questions(csv_path) 
-        
-        if questions: 
-            print(f"sucessfully loaded {len(questions)} questions.")    
-            print("\n---- TEST: PRINTING FIRST QUESTION ----")
-            print(questions[0])
-            print("-----------------------------------------") 
-            
-        else:
-            print("Failed to load questions. Exiting")
-                   
 # ----------------------------------
-#         shuffel question
+#  shuffel question and test user
 # ----------------------------------
 
-def shuffel_questions_one_by_one(questions):
+def shuffle_and_show_one_by_one(questions):
     print("shufffling not emplemented")
     
 def test_user(questions):
     print("testing not implemented")
     
-# ----------------------------------
-#            MENUE LOOP
-# ----------------------------------
+# =====================================
+# Display_question_by_id
+# =====================================
 
-def show_menue():
-    print("\n======= Quiz Menue ========")
-    print("1. Shuffel questions one by one")
-    print("2. Display questions by ID:")
-    print("3. Test yourself:")
-    print("4. Exit:")
+def display_question_by_id(questions):
+    qid = input("Eneter question ID: ").strip()
+    
+    if not qid.isdigit():
+        print("Invalid ID.\n")
+
+    qid = int(qid)
     
     
+    group = [q for q in questions if q["id"] == qid]
+
+    if not group:
+        print("No question with this ID.\n")
+        return
     
-    def start_quiz(questions):
-        while True:
-            show_menue()
-            choice = input("Enter Choice: :").strip
+    print("\n====================================================")
+    
+    main_text = group[0]["question"]
+    print(f"Q. {qid}. {main_text}\n")
+    
+    for q in group:
+        print(f"{q['lable']}")
+        
+        if q["type"] == "mcq":
+            for i, opt in enumerate(q["options"], 1):
+                print(f"    {i}. {opt}")
+                
+        elif q["type"] == "match":
+            print("\n Column A:")
+            for a in q["columnA"]:
+                print("      ", a)
             
-            if choice == "1":
-                shuffel_questions_one_by_one
+            print("\n Column B :")
+            for b in q["columnB"]:
+                print("       ", b)
+                
+                
+        print(f"  Answer: {q['answer']} \n")
+    print("=========================================\n")
+        
+   
+
+# ---------------------------------------------------------
+# MENU & MAIN LOOP (Check Indentation Carefully!)
+# ---------------------------------------------------------
+def show_menu():
+    print("\n===== QUIZ MENU =====")
+    print("1. Shuffle questions and show one by one")
+    print("2. Display a question by ID")
+    print("3. Test yourself")
+    print("4. Exit")
+
+
+def start_quiz(questions):
+    while True: # <--- All code below must be indented once
+        show_menu()
+        choice = input("Enter choice: ").strip()
+
+        if choice == "1": # <--- All code below must be indented twice
+            shuffle_and_show_one_by_one(questions)
+
+        elif choice == "2":
+            display_question_by_id(questions)
             
+        elif choice == "3":
+            test_user(questions)
+
+        elif choice == "4":
+            print("Goodbye!")
+            break
+
+        else:
+            print("Invalid choice. Try again.")
+    # ======= Main loop ========      
     
 
+    # ---------------------------------------------------------
+# MAIN EXECUTION
+# ---------------------------------------------------------
+
+if __name__ == "__main__":
     
+    
+    csv_path = r"C:\Users\CSH\Desktop\Engeneering Economics\Mcq.csv"
+    questions = load_questions(csv_path)
+    
+    # --- CHECKPOINT B ---
+    if questions:
+        print(f"SUCCESS: Loaded {len(questions)} questions.")
+        
+        
+        first_id = questions[0]["id"]
+        print(f"DEBUG: The first loaded question has ID: {first_id}")
+        
+        # --- CHECKPOINT C ---
+        print("Starting Menu...")
+        start_quiz(questions) 
+    else:
+        print("FAILURE: Questions is None. Exiting.")
