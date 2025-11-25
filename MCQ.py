@@ -9,30 +9,29 @@ def split_pipe(x):
     return [i.strip() for i in x.split("|")] if x and x.strip() else[]
 
 
-def load_questions(csv_path):
-    """Loads the csv file and returs a list of dictionaries."""
-    
-    
-    data=[]
+# ---------------------------------------------------------
+# LOAD CSV
+# ---------------------------------------------------------
+def load_questions(csv_file):
+    data = []
     try:
-        with open(csv_path, newline='', encoding="cp1252") as f:
-        
+        with open(csv_file, newline='', encoding="cp1252") as f:
             reader = csv.DictReader(f)
-        
             for row in reader:
-            
-                q={"id": int(row["id"]),
-                "type": row["type"].strip().lower(),
-                "lable": row["label"].strip(),
-                "question": row["question"].strip(),
-                "options": split_pipe(row["options"]),
-                "column A": split_pipe(row["left"]),
-                "column B": split_pipe(row["right"]),
+                q = {
+                    "id": int(row["id"]),
+                    "type": row["type"].strip().lower(),
+                    "label": row["label"].strip(),
+                    "question": row["question"].strip(),
+                    "answer": row["answer"].strip(), 
+                    "options": split_pipe(row["options"]),
+                    "columnA": split_pipe(row["left"]),
+                    "columnB": split_pipe(row["right"])
                 }
-            data.append(q) 
-            
+                data.append(q)
+                
     except FileNotFoundError:
-        print(f"Error: The file '{csv_path}' was not found.")
+        print(f"Error: The file '{csv_file}' was not found.")
         return None
     except Exception as e:
         print(f"An error occurred: {e}")
@@ -46,19 +45,23 @@ def load_questions(csv_path):
 
 def shuffle_and_show_one_by_one(questions):
     print("shufffling not emplemented")
-    
+# ============== Test user : ===============
+  
 def test_user(questions):
-    print("testing not implemented")
+    
+    print(f"\n{q['lable']}")
+    
+   
     
 # =====================================
-# Display_question_by_id
+# Display_question_by_id (TEXTBOOK FORMAT)
 # =====================================
-
 def display_question_by_id(questions):
-    qid = input("Eneter question ID: ").strip()
-    
+    qid = input("Enter question ID: ").strip()
+
     if not qid.isdigit():
         print("Invalid ID.\n")
+        return
 
     qid = int(qid)
     
@@ -68,33 +71,48 @@ def display_question_by_id(questions):
     if not group:
         print("No question with this ID.\n")
         return
-    
+
     print("\n====================================================")
+    
     
     main_text = group[0]["question"]
     print(f"Q. {qid}. {main_text}\n")
+
     
-    for q in group:
-        print(f"{q['lable']}")
+    if group[0]["type"] == "match":
         
-        if q["type"] == "mcq":
-            for i, opt in enumerate(q["options"], 1):
-                print(f"    {i}. {opt}")
-                
-        elif q["type"] == "match":
-            print("\n Column A:")
-            for a in q["columnA"]:
-                print("      ", a)
+       
+        print(f"   {'Column A':<40}Column B")
+        print(f"   {'-'*35}     {'-'*30}") 
+
+        
+        for q in group:
             
-            print("\n Column B :")
-            for b in q["columnB"]:
-                print("       ", b)
-                
-                
-        print(f"  Answer: {q['answer']} \n")
-    print("=========================================\n")
+            txt_a = q['columnA'][0] if q['columnA'] else q['label']
+            txt_b = q['columnB'][0] if q['columnB'] else ""
+            
+            
+            print(f"   {txt_a:<40}{txt_b}")
+
         
-   
+        print("\n   [ Answer Key ]")
+        for q in group:
+             
+             label_part = q['label'].split(' ')[0] 
+             print(f"   {label_part} -> {q['answer']}")
+
+    
+    else:
+        for q in group:
+            print(f"{q['label']}") 
+            
+            if q["type"] == "mcq":
+                for i, opt in enumerate(q["options"], 1):
+                    print(f"    {i}. {opt}")
+                    
+            print(f"   Answer: {q['answer']} \n")
+
+    print("=========================================\n")
 
 # ---------------------------------------------------------
 # MENU & MAIN LOOP (Check Indentation Carefully!)
