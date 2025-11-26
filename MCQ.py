@@ -43,8 +43,62 @@ def load_questions(csv_file):
 #  shuffel question and test user
 # ----------------------------------
 
+def ask_mcq(q):
+    print(f"\n{q['question']}")
+    print(f"\n{q['label']}")
+    for i, opt in enumerate(q["options"], 1):
+        print(f"    {i}. {opt}")
+        input("\n Press ENTER to show answer: ")
+        print(f"Correct Answer: {q['answer']}\n")
+        
+def ask_fill(q):
+    print(f"\n{q['label']}")
+    input("Your Answer: ")
+    print(f"Correct Answer: {q['answer']}\n")
+    
+    
+def ask_true(q):
+    print(f"\n{q['label']}")
+    input("True / False? : ")
+    print(f"Correct Answer: {q['answer']}\n")
+    
+def ask_match(q):
+    print(f"\n{q['question']}")
+    
+    
+    txt_a = q['columnA'][0] if q['columnA'] else q['label']
+    
+            
+            
+    print(f"   {txt_a:<40}")
+
+
+    input("\n Press ENTER to show answer: ")
+    print(f"Correct Answer: {q['answer']}\n")
+
+
 def shuffle_and_show_one_by_one(questions):
-    print("shufffling not emplemented")
+    print("\n shufffling questions.....")
+    shuffled_questions = list(questions)
+    random.shuffle(shuffled_questions)
+    
+    print(f"Starting study mode with {len(shuffled_questions)} questions. \n")
+    
+    for q in shuffled_questions:
+        print("-----------------------------------------")
+        
+        if q["type"]=="mcq":
+            ask_mcq(q)
+        elif q["type"] == "fill":
+            ask_fill(q)
+        elif q["type"] == "truefasle":
+            ask_true(q)
+        elif q["type"] == "match":
+            ask_match(q)
+            
+            print("---End of shuffled questions---")
+            
+            
 # ============== Test user : ===============
   
 def test_user(questions):
@@ -100,9 +154,14 @@ def display_question_by_id(questions):
         print("\n   [ Answer Key ]")
         for q in group:
              
-             label_part = q['label'].split(' ')[0] 
+             
+             source_text= q['label'] if q['label'] else (q['columnA'][0] if q['columnA'] else "")
+             
+             label_part = source_text.split(' ')[0]          
+             
              print(f"   {label_part} -> {q['answer']}")
-
+             
+            
     
     else:
         for q in group:
@@ -130,11 +189,11 @@ def show_menu():
 
 
 def start_quiz(questions):
-    while True: # <--- All code below must be indented once
+    while True:
         show_menu()
         choice = input("Enter choice: ").strip()
 
-        if choice == "1": # <--- All code below must be indented twice
+        if choice == "1": 
             shuffle_and_show_one_by_one(questions)
 
         elif choice == "2":
@@ -146,7 +205,7 @@ def start_quiz(questions):
         elif choice == "4":
             print("Goodbye!")
             break
-
+        
         else:
             print("Invalid choice. Try again.")
     # ======= Main loop ========      
