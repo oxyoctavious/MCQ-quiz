@@ -61,6 +61,7 @@ def display_question_by_id(questions):
 
     if not qid.isdigit():
         print("Invalid ID.\n")
+        input("press ENTER to continue...")
         return
 
     qid = int(qid)
@@ -70,6 +71,7 @@ def display_question_by_id(questions):
 
     if not group:
         print("No question with this ID.\n")
+        input("Press ENTER to continue...")
         return
 
     print("\n====================================================")
@@ -113,9 +115,11 @@ def display_question_by_id(questions):
             print(f"   Answer: {q['answer']} \n")
 
     print("=========================================\n")
+    
+    input("Press ENTER to return to menue...")
 
 # ---------------------------------------------------------
-# MENU & MAIN LOOP (Check Indentation Carefully!)
+# MENU & MAIN LOOP 
 # ---------------------------------------------------------
 def show_menu():
     print("\n===== QUIZ MENU =====")
