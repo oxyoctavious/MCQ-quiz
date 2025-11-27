@@ -39,65 +39,112 @@ def load_questions(csv_file):
         
     return data
 
-# ----------------------------------
-#  shuffel question and test user
-# ----------------------------------
-
+# ---------------------------------------------------------
+# STUDY MODE HELPERS (Simple Display for MCQ, Fill, T/F)
+# ---------------------------------------------------------
 def ask_mcq(q):
     print(f"\n{q['question']}")
-    print(f"\n{q['label']}")
+    print(f"{q['label']}")
+    
+    # FIX: Move input/answer printing OUTSIDE the options loop
     for i, opt in enumerate(q["options"], 1):
         print(f"    {i}. {opt}")
-        input("\n Press ENTER to show answer: ")
-        print(f"Correct Answer: {q['answer']}\n")
+        
+    input("\n Press ENTER to show answer: ")
+    print(f"Correct Answer: {q['answer']}\n")
         
 def ask_fill(q):
+    print(f"\n{q['question']}")
     print(f"\n{q['label']}")
     input("Your Answer: ")
     print(f"Correct Answer: {q['answer']}\n")
     
     
-def ask_true(q):
+def ask_truefalse(q): # FIX: Renamed from ask_true to align with q["type"]
+    print(f"\n{q['question']}")
     print(f"\n{q['label']}")
     input("True / False? : ")
     print(f"Correct Answer: {q['answer']}\n")
     
-def ask_match(q):
-    print(f"\n{q['question']}")
+# ---------------------------------------------------------
+# MATCH AGGREGATOR FUNCTION (For Grouped Display in Option 1)
+# ---------------------------------------------------------
+def ask_match_study_group(q_row, full_questions_list): # FIX: Renamed function for clarity
+    """Finds and displays the entire match the following group."""
+    
+    qid = q_row["id"]
+    group = [q for q in full_questions_list if q["id"] == qid]
+    
+    if not group:
+        print("Error: Match group not found.")
+        return
     
     
-    txt_a = q['columnA'][0] if q['columnA'] else q['label']
+    print("\n------------------------------------------------------------")
+    print(f"Q. {qid}. {group[0]['question']}\n")
     
-            
-            
-    print(f"   {txt_a:<40}")
+    
+    print(f"   {'Column A':<40}Column B")
+    print(f"   {'-'*35}     {'-'*30}") 
+    for q in group:
+        txt_a = q['columnA'][0] if q['columnA'] else q['label']
+        txt_b = q['columnB'][0] if q['columnB'] else ""
+        print(f"   {txt_a:<40}{txt_b}")
+    
+    input("\n Press ENTER to show answers: ")
+    print(f"Correct Answers:")
+    
+    for q in group:
+        
+        source_text= q['label'] if q['label'] else (q['columnA'][0] if q['columnA'] else "")             
+        label_part = source_text.split(' ')[0]  
+        print(f"   {label_part} -> {q['answer']}")
+    
+    print("\n------------------------------------------------------------") 
 
 
-    input("\n Press ENTER to show answer: ")
-    print(f"Correct Answer: {q['answer']}\n")
-
+# ---------------------------------------------------------
+# OPTION 1: SHUFFLE LOGIC (Controller)
+# ---------------------------------------------------------
 
 def shuffle_and_show_one_by_one(questions):
-    print("\n shufffling questions.....")
+    print("\nShuffling questions...")
     shuffled_questions = list(questions)
     random.shuffle(shuffled_questions)
     
-    print(f"Starting study mode with {len(shuffled_questions)} questions. \n")
+    # --- FIX: INITIALIZE THE SET HERE ---
+    displayed_ids = set() 
+    # ------------------------------------
+    
+    print(f"Starting Study Mode with {len(shuffled_questions)} individual items.\n")
     
     for q in shuffled_questions:
-        print("-----------------------------------------")
         
-        if q["type"]=="mcq":
-            ask_mcq(q)
-        elif q["type"] == "fill":
-            ask_fill(q)
-        elif q["type"] == "truefasle":
-            ask_true(q)
-        elif q["type"] == "match":
-            ask_match(q)
+        # 1. Check if the question row belongs to a group already shown
+        if q["id"] in displayed_ids:
+            continue
             
-            print("---End of shuffled questions---")
+        # 2. If it's a MATCH type, display the whole group and mark it done
+        if q["type"] == "match":
+            ask_match_study_group(q, questions) 
+            displayed_ids.add(q["id"]) # Mark this ID as displayed
             
+        # 3. Handle all other single question types
+        else:
+            print("---------------------------------------")
+            if q["type"] == "mcq":
+                ask_mcq(q)
+            elif q["type"] == "fill":
+                ask_fill(q)
+            elif q["type"] == "truefalse":
+                ask_truefalse(q)
+            else:
+                # Fallback
+                print(f"\n{q['label']}")
+                input("Press ENTER for answer...")
+                print(f"Answer: {q['answer']}\n")
+
+    print("--- End of Study Mode ---")
             
 # ============== Test user : ===============
   
@@ -108,7 +155,7 @@ def test_user(questions):
    
     
 # =====================================
-# Display_question_by_id (TEXTBOOK FORMAT)
+# Display_question_by_id 
 # =====================================
 def display_question_by_id(questions):
     qid = input("Enter question ID: ").strip()
